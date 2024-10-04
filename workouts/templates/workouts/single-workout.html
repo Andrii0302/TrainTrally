@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1> Name: {{workout.name}}</h1>
+<p>Description: {{workout.description}}</p>
+<img src="{{ workout.featured_img.url }}" alt="workout thumbnail" />
+<p>Volume: {{ workout.volume}}</p>
+<p>Sets: {{ workout.sets}}</p>
+<p>Duration: {{ workout.duration }}</p>
+<p>Created: {{workout.created}}</p>
+
+{% endblock %}
