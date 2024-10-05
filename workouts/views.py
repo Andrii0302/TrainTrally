@@ -29,15 +29,15 @@ class CreateWorkoutView(LoginRequiredMixin, FormView):
         form.save()
         return super().form_valid(form)
 
-class UpdateFormView(LoginRequiredMixin,View):
+class UpdateWorkoutView(LoginRequiredMixin,View):
     def get(self, request, pk):
-        workout = get_object_or_404(Workout, id=pk,owner=self.request.user.profile)  
+        workout = get_object_or_404(Workout, id=pk, owner=self.request.user.profile)
         form = WorkoutForm(instance=workout)
         context = {'form': form, 'workout': workout}
         return render(request, 'workouts/workout-form.html', context)
 
     def post(self, request, pk):
-        workout = get_object_or_404(Workout, id=pk,owner=self.request.user.profile)  
+        workout = get_object_or_404(Workout, id=pk, owner=self.request.user.profile)
         form = WorkoutForm(request.POST, request.FILES, instance=workout)
         if form.is_valid():
             form.save()
@@ -51,7 +51,8 @@ class WorkoutView(DetailView):
     context_object_name = 'workout'
     def get_queryset(self) -> QuerySet[Any]:
         return Workout.objects.all()
-class DeleteWorkoutView(View):
+    
+class DeleteWorkoutView(LoginRequiredMixin,View):
     def get(self, request, pk):
         workout = get_object_or_404(Workout, id=pk,owner=self.request.user.profile)
         context = {'workout': workout}

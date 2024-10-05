@@ -10,5 +10,8 @@
 <p>Duration: {{ workout.duration }}</p>
 <p>Created: {{workout.created}}</p>
 <p>Id: {{ workout.id }}</p>
-
+{% if request.user.is_authenticated and workout.owner == request.user.profile %}
+<a href="{% url 'update-workout' workout.id %}">Edit workout</a>
+<a href="{% url 'delete-workout' workout.id %}">Delete workout</a>
+{% endif %}
 {% endblock %}
