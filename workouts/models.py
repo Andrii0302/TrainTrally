@@ -1,7 +1,8 @@
 from django.db import models
+from users.models import Profile
 import uuid
 class Workout(models.Model):
-    # owner = models.ForeignKey(Profile,null=True,blank=True,on_delete=models.CASCADE)
+    owner = models.ForeignKey(Profile,null=True,blank=True,on_delete=models.CASCADE)
     id = models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True,editable=False)
     name = models.CharField(max_length=200,null=True,blank=True)
     description = models.TextField(null=True,blank=True)

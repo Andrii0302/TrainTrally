@@ -5,5 +5,6 @@ class WorkoutForm(forms.ModelForm):
     class Meta:
         model=Workout
         fields='__all__'
+        exclude=['owner']
         
     

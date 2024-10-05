@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<main >
+    <div>
+        <div>
+            <a class="backButton" href="{% url 'account' %}"><i></i></a>
+            <br>
+
+            <form class="form" action="{% url 'edit-account' %}" method='POST' enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+
+                <div class="form__field">
+                    <label for="">{{ field.label }} </label>
+                    {{field}}
+                </div>
+                {% endfor %}
+                <input type="submit" value="Submit" />
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

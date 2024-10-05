@@ -1,10 +1,13 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import get_object_or_404, render,redirect
 from django.views import View
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.contrib.auth import login,authenticate,logout 
 from django.contrib import messages
-from .forms import CustomCreationForm
+from .forms import CustomCreationForm,ProfileForm
+from django.views.generic import ListView,DetailView
+from .models import Profile
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class LoginUserView(View):
     page='login'
@@ -50,7 +53,41 @@ class RegisterUserView(View):
         else:
             messages.error(request, 'An error has occurred during registration')
             return render(request, 'users/login_register.html', {'page': self.page, 'form': form})
+
+class ProfilesView(ListView):
+    model = Profile
+    template_name = 'users/profiles.html'
+    context_object_name = 'users'
+    # paginate_by = 6
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.order_by('-created')
+
+class UserProfileView(DetailView):
+    model = Profile
+    template_name = 'users/user-profile.html'
+    context_object_name = 'profile'
+
+class UserAccountView(LoginRequiredMixin,View):
+    def get(self, request):
+        user = request.user
+        profile = user.profile
+        context = {
+            'profile': profile,
+            'user':user,
+        }
+        return render(request, 'users/account.html', context)
     
-        
 
-
+class UserEditAccountView(LoginRequiredMixin,View):
+    def get(self,request):
+        profile = request.user.profile
+        form = ProfileForm(instance=profile)
+        return render(request,'users/profile_form.html',{'form':form})
+    def post(self,request):
+        profile = request.user.profile
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('account')
+        return render(request,'users/profile_form.html',{'form:form'})

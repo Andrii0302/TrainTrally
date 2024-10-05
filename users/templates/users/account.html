@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1>My Account</h1>
+<h1>{{ profile.user.username }}'s Profile</h1>
+<img src="{{ profile.profile_image.url }}" alt="Profile Picture">
+<p>Name: {{ profile.name }}</p>
+<p>Email: {{ profile.email }}</p>
+<p>Location: {{ profile.location }}</p>
+<p>Short Introduction: {{ profile.short_intro }}</p>
+<p>Bio: {{ profile.bio }}</p>
+{% endblock %}
