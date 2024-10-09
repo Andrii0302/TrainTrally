@@ -12,6 +12,7 @@ from django.views.generic.edit import FormView,UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import SetForm,ExerciseHistorySetForm
 from django.db.models.signals import m2m_changed
+from django.db.models import Sum, F
 """
 Workouts
 """
@@ -191,9 +192,6 @@ class UpdateWorkoutView(LoginRequiredMixin, View):
         }
         return render(request, 'workouts/update-workout.html', context)
 
-
-
-
 class WorkoutView(DetailView):
     model = Workout
     template_name = 'workouts/single-workout.html'
@@ -215,6 +213,7 @@ class WorkoutView(DetailView):
             })
         context['exercise_histories'] = histories_with_sets
         return context
+
 class DeleteWorkoutView(LoginRequiredMixin,View):
     def get(self, request, pk):
         workout = get_object_or_404(Workout, id=pk,owner=self.request.user.profile)
@@ -244,6 +243,7 @@ class CreateCustomExerciseView(LoginRequiredMixin,View):
             return redirect('exercises')
         context = {'form': form}
         return render(request, 'workouts/exercise-form.html', context)
+
 class DeleteCustomExerciseView(LoginRequiredMixin,View):
     def get(self, request, pk):
         exercise = get_object_or_404(Exercise, id=pk, owner=self.request.user.profile)
@@ -261,7 +261,73 @@ class SingleExerciseView(LoginRequiredMixin,DetailView):
     def get_queryset(self) -> QuerySet[Any]:
         return Exercise.objects.all()
 
-# no update exercise view
+class WorkoutChartView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        workout = get_object_or_404(Workout, id=pk, owner=self.request.user.profile)
+
+        context = {'workout': workout}
+        labels = []
+        percentage_data = []
+        muscle_groups = {}
+
+        total_primary_sets = 0  # Total primary muscle sets
+        total_secondary_sets = 0  # Total secondary muscle sets (counted half)
+
+        # Get exercise history for the workout
+        queryset = ExerciseHistory.objects.filter(workout=workout)
+
+        for exer_history in queryset:
+            exercise = exer_history.exercise
+            sets = exer_history.total_sets
+
+            # Add primary muscle groups
+            primary_muscles = exercise.primary.all()
+            for primary_muscle in primary_muscles:
+                if primary_muscle.name not in muscle_groups:
+                    muscle_groups[primary_muscle.name] = {'primary_sets': 0, 'secondary_sets': 0}
+                muscle_groups[primary_muscle.name]['primary_sets'] += sets
+                total_primary_sets += sets
+
+            # Add secondary muscle groups (count half)
+            secondary_muscles = exercise.secondary.all()
+            for secondary_muscle in secondary_muscles:
+                if secondary_muscle.name not in muscle_groups:
+                    muscle_groups[secondary_muscle.name] = {'primary_sets': 0, 'secondary_sets': 0}
+                muscle_groups[secondary_muscle.name]['secondary_sets'] += sets * 0.5
+                total_secondary_sets += sets * 0.5
+
+        # Calculate total sets (primary + 0.5 * secondary)
+        total_sets = total_primary_sets + total_secondary_sets
+
+        # Now calculate the percentage for each muscle group
+        for muscle_group, data in muscle_groups.items():
+            primary_sets = data['primary_sets']
+            secondary_sets = data['secondary_sets']
+
+            # Calculate intensity as (primary sets + 0.5 * secondary sets) / total sets
+            intensity = (primary_sets + secondary_sets) / total_sets if total_sets > 0 else 0
+
+            # Convert intensity to percentage
+            percentage = intensity * 100
+
+            muscle_groups[muscle_group]['percentage'] = percentage
+
+        # Prepare labels and data for charting
+        for muscle_group, data in muscle_groups.items():
+            labels.append(muscle_group)
+            percentage_data.append(data['percentage'])
+
+        # Add labels and data to context for rendering in the template
+        context['labels'] = labels
+        context['data'] = percentage_data
+
+        return render(request, 'workouts/workout-chart.html', context)
+
+
+
+
+
+
 
 
 

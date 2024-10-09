@@ -5,8 +5,8 @@ import uuid
 class Exercise(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200, blank=True, null=True)
-    primary = models.CharField(max_length=200, blank=True, null=True)
-    secondary = models.CharField(max_length=200, blank=True, null=True)
+    primary = models.ManyToManyField('MuscleGroupTag', related_name="primary_muscles", blank=True)
+    secondary = models.ManyToManyField('MuscleGroupTag', related_name="secondary_muscles", blank=True)
     description = models.TextField(null=True, blank=True)
     user_note = models.CharField(max_length=500, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -82,3 +82,10 @@ class ExerciseHistorySet(models.Model):
 
     def __str__(self):
         return f'Set {self.set_number} of {self.history.exercise.name} in workout {self.history.workout.name}'
+
+class MuscleGroupTag(models.Model):
+    name=models.CharField(max_length=200)
+    created=models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid.uuid4,unique=True,primary_key=True,editable=False)
+    def __str__(self):
+        return self.name

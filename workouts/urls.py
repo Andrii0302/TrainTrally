@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import HomeView,WorkoutsView,CreateWorkoutView,UpdateWorkoutView,WorkoutView,DeleteWorkoutView,\
-ExercisesView,CreateCustomExerciseView,DeleteCustomExerciseView, SingleExerciseView,SubmitWorkoutView
+ExercisesView,CreateCustomExerciseView,DeleteCustomExerciseView, SingleExerciseView,SubmitWorkoutView,WorkoutChartView
 
 urlpatterns = [
     path('',HomeView.as_view(),name='home'),
@@ -14,4 +14,5 @@ urlpatterns = [
     path('delete-exercise/<uuid:pk>/',DeleteCustomExerciseView.as_view(),name='delete-exercise'),
     path('exercise/<uuid:pk>/',SingleExerciseView.as_view(),name='exercise'),
     path('submit-workout/<uuid:pk>/',SubmitWorkoutView.as_view(),name='submit-workout'),
+    path('show-chart/<uuid:pk>/',WorkoutChartView.as_view(),name='show-chart'),
 ]

@@ -9,6 +9,6 @@
 <p>Id: {{ exercise.id }}</p>
 {% if request.user.is_authenticated and exercise.owner == request.user.profile %}
 
-<a href="{% url 'delete-exercise' exercise.id %}">Delete workout</a>
+<a href="{% url 'delete-exercise' exercise.id %}">Delete exercise</a>
 {% endif %}
 {% endblock %}

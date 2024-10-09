@@ -13,6 +13,7 @@
 {% if request.user.is_authenticated and workout.owner == request.user.profile %}
     <a href="{% url 'update-workout' workout.id %}">Edit workout</a>
     <a href="{% url 'delete-workout' workout.id %}">Delete workout</a>
+    <a href="{% url 'show-chart' workout.id %}">See chart</a>
 {% endif %}
 
 <h3>Exercise Histories:</h3>

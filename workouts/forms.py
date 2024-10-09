@@ -13,7 +13,12 @@ class WorkoutForm(forms.ModelForm):
 class ExerciseForm(forms.ModelForm):
     class Meta:
         model = Exercise
-        fields = ['owner','name', 'primary', 'secondary', 'description', 'user_note']
+        fields = ['name', 'primary', 'secondary', 'description', 'user_note']
+        widgets = {
+            'primary': forms.CheckboxSelectMultiple(),
+            'secondary': forms.CheckboxSelectMultiple(),
+        }
+        
 
 class SetForm(forms.ModelForm):
     class Meta:
