@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ workout_form.as_p }}
+    <h2>Exercise Sets</h2>
+    {% for exercise_history, form in exercise_history_set_forms %}
+        <div>
+            <h3>{{ exercise_history.exercise.name }}</h3>
+            {{ form.as_p }}
+        </div>
+    {% endfor %}
+    <button type="submit">Update Workout</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<form class="form" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for field in form %}
+    <!-- Input:Text -->
+    <div class="form__field">
+        <label for="formInput#text">{{ field.label }}</label>
+        {{field}}
+    </div>
+    {% endfor %}
+    <input type="submit" value="Submit" />
+</form>
+{% endblock %}

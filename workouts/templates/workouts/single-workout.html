@@ -1,17 +1,49 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<h1> Name: {{workout.name}}</h1>
-<h2>Owner : {{ workout.owner }}</h2>
-<p>Description: {{workout.description}}</p>
+<h1>Name: {{ workout.name }}</h1>
+<h2>Owner: {{ workout.owner }}</h2>
+<p>Description: {{ workout.description }}</p>
 <img src="{{ workout.featured_img.url }}" alt="workout thumbnail" />
-<p>Volume: {{ workout.volume}}</p>
-<p>Sets: {{ workout.sets}}</p>
+<p>Volume: {{ workout.volume }}</p>
 <p>Duration: {{ workout.duration }}</p>
-<p>Created: {{workout.created}}</p>
-<p>Id: {{ workout.id }}</p>
+<p>Created: {{ workout.created }}</p>
+<p>ID: {{ workout.id }}</p>
+
 {% if request.user.is_authenticated and workout.owner == request.user.profile %}
-<a href="{% url 'update-workout' workout.id %}">Edit workout</a>
-<a href="{% url 'delete-workout' workout.id %}">Delete workout</a>
+    <a href="{% url 'update-workout' workout.id %}">Edit workout</a>
+    <a href="{% url 'delete-workout' workout.id %}">Delete workout</a>
 {% endif %}
+
+<h3>Exercise Histories:</h3>
+<ul>
+    {% for item in exercise_histories %}
+        <li>
+            <strong>Exercise: {{ item.history.exercise.name }}</strong>
+            <ul>
+                <li>Total Sets: {{ item.history.total_sets }}</li>
+                <li>Total Reps: {{ item.history.total_reps }}</li>
+                <li>Total Weight: {{ item.history.total_weight }}</li>
+                <li>Created: {{ item.history.created }}</li>
+                
+                <h4>Sets:</h4>
+                <ul>
+                    {% for set in item.sets %}
+                        <li>
+                            Set Number: {{ set.set_number }}, 
+                            Reps: {{ set.reps }}, 
+                            Weight: {{ set.weight }}, 
+                            Set Type: {{ set.set_type }}, 
+                            Done: {{ set.done }}
+                        </li>
+                    {% empty %}
+                        <li>No sets recorded for this exercise.</li>
+                    {% endfor %}
+                </ul>
+            </ul>
+        </li>
+    {% empty %}
+        <li>No exercise histories found for this workout.</li>
+    {% endfor %}
+</ul>
 {% endblock %}

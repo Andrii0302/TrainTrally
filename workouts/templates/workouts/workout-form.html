@@ -1,15 +1,85 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<form class="form" method="POST" enctype="multipart/form-data">
+<h1>Create Workout</h1>
+<form method="POST" id="workout-form">
     {% csrf_token %}
-    {% for field in form %}
-    <!-- Input:Text -->
-    <div class="form__field">
-        <label for="formInput#text">{{ field.label }}</label>
-        {{field}}
+    <div id="exercise-container">
+        <label for="exercise">Choose an exercise:</label>
+        <select name="exercise" id="exercise">
+            {% for exercise in exercises %}
+                <option value="{{ exercise.id }}">{{ exercise.name }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="button" id="add-exercise-btn">Add Exercise</button>
     </div>
-    {% endfor %}
-    <input type="submit" value="Submit" />
+
+    <button type="submit">Submit Workout</button>
 </form>
+
+<script>
+    $(document).ready(function() {
+        let exerciseCount = 0; // Counter for added exercises
+
+        // Function to add sets for a specific exercise
+        function addSet(exerciseId, exerciseName, setCount) {
+            const newSet = `
+                <div class="set-entry" data-exercise-id="${exerciseId}">
+                    <h4>Set ${setCount}</h4>
+                    <label for="reps">Reps:</label>
+                    <input type="number" name="reps" required>
+
+                    <label for="weight">Weight:</label>
+                    <input type="number" name="weight" required>
+
+                    <label for="set_type">Set Type:</label>
+                    <select name="set_type" required>
+                        <option value="W">Warmup</option>
+                        <option value="R">Rest Set</option>
+                        <option value="D">Drop Set</option>
+                        <option value="N">Normal Set</option>
+                        <option value="F">Failure Set</option>
+                    </select>
+
+                    <label for="done">Done:</label>
+                    <input type="checkbox" name="done" value="true"> <!-- Checkbox for 'done' -->
+
+                    <input type="hidden" name="exercise_id" value="${exerciseId}"> <!-- Store the exercise ID -->
+                </div>
+            `;
+
+            // Append the new set to the specific exercise entry
+            $(`#exercise-entry-${exerciseCount} .sets-container`).append(newSet);
+        }
+
+        // Function to add an exercise and its sets
+        $('#add-exercise-btn').click(function() {
+            const exerciseId = $('#exercise').val();
+            const exerciseName = $('#exercise option:selected').text();
+            exerciseCount++;
+
+            // Create a new exercise entry with a button to add sets
+            const newExerciseEntry = `
+                <div class="exercise-entry" id="exercise-entry-${exerciseCount}">
+                    <h2>${exerciseName}</h2>
+                    <button type="button" class="add-set-btn" data-exercise-id="${exerciseId}" data-set-count="1">Add Set</button>
+                    <div class="sets-container"></div> <!-- Container for sets specific to this exercise -->
+                </div>
+            `;
+
+            $('#exercise-container').append(newExerciseEntry);
+
+            // Event handler for adding sets to this exercise
+            $(`#exercise-entry-${exerciseCount} .add-set-btn`).click(function() {
+                // Get the current set count and increment it
+                let currentSetCount = parseInt($(this).data('set-count'));
+                addSet(exerciseId, exerciseName, currentSetCount);
+
+                // Update the set count for the next set
+                $(this).data('set-count', currentSetCount + 1);
+            });
+        });
+    });
+</script>
 {% endblock %}

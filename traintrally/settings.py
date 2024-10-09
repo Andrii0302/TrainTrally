@@ -77,12 +77,19 @@ WSGI_APPLICATION = 'traintrally.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# settings.py
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',  # Using the PostgreSQL engine
+        'NAME': 'traintrally',               # Name of your PostgreSQL database
+        'USER': 'postgres',               # Your PostgreSQL username
+        'PASSWORD': 'Andrey955#',                # Your PostgreSQL password
+        'HOST': 'localhost',                        # Set to 'localhost' for local dev, or the DB server IP
+        'PORT': '5432',                             # PostgreSQL port (default is 5432)
     }
 }
+
 
 
 # Password validation

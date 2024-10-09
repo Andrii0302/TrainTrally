@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% for exercise in exercises %}
+<a href="{% url 'exercise' exercise.id %}"><h3>{{ exercise.name }}</h3></a>
+    <p>Primary {{ exercise.primary }}</p>
+    <p>Secondary {{ exercise.secondary }}</p>
+    <p>Id : {{ exercise.id }}</p>
+{% endfor %}
+{% endblock %}

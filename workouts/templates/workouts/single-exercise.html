@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1> Name: {{exercise.name}}</h1>
+<h2>Owner : {{ exercise.owner }}</h2>
+<p>Description: {{exercise.description}}</p>
+<p>Primary: {{exercise.primary}}</p>
+<p>Secondary: {{exercise.secondary}}</p>
+<p>Id: {{ exercise.id }}</p>
+{% if request.user.is_authenticated and exercise.owner == request.user.profile %}
+
+<a href="{% url 'delete-exercise' exercise.id %}">Delete workout</a>
+{% endif %}
+{% endblock %}
