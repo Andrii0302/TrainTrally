@@ -7,5 +7,5 @@ urlpatterns = [
     path('profiles/', views.ProfilesView.as_view(), name='profiles'),
     path('profile/<uuid:pk>/', views.UserProfileView.as_view(), name='profile-detail'),
     path('account/', views.UserAccountView.as_view(), name='account'),
-    path('edit-account/', views.UserEditAccountView.as_view(), name='edit-account'),
+    path('edit-account/', views.UserEditAccountView.as_view(), name='edit-account')
 ]
