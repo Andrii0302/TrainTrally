@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile
+from .models import Profile,Message
 
 class CustomCreationForm(UserCreationForm):
     class Meta:
@@ -16,3 +16,7 @@ class ProfileForm(ModelForm):
         model=Profile
         fields='__all__'
         exclude=['user','created','id']
+class MessageForm(ModelForm):
+    class Meta:
+        model=Message
+        fields=['name','email','subject','body']

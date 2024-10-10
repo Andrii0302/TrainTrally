@@ -9,4 +9,7 @@
 <p>Location: {{ profile.location }}</p>
 <p>Short Introduction: {{ profile.short_intro }}</p>
 <p>Bio: {{ profile.bio }}</p>
+{% if request.user.profile.id != profile.id %}
+<a href="{% url 'create-message' profile.id %}" class="btn btn--sub btn--lg">Send Message </a>
+{% endif %}
 {% endblock %}

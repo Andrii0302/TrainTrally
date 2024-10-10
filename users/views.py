@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 from django.http import Http404, HttpResponse
 from django.contrib.auth import login,authenticate,logout 
 from django.contrib import messages
-from .forms import CustomCreationForm,ProfileForm
+from .forms import CustomCreationForm, MessageForm,ProfileForm
 from django.views.generic import ListView,DetailView
-from .models import Profile
+from .models import Profile,Message
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 class LoginUserView(View):
@@ -91,3 +91,46 @@ class UserEditAccountView(LoginRequiredMixin,View):
             form.save()
             return redirect('account')
         return render(request,'users/profile_form.html',{'form:form'})
+
+class InboxView(LoginRequiredMixin,View):
+    def get(self,request):
+        profile = request.user.profile
+        messageRequest = profile.messages.all()
+        unreadCount = messageRequest.filter(is_read=False).count()
+        context={'messageRequest':messageRequest,'unreadCount':unreadCount}
+        return render(request,'users/inbox.html',context)
+
+class InboxMessageView(LoginRequiredMixin,View):
+    def get(self,request,pk):
+        profile = request.user.profile
+        message = profile.messages.get(id=pk)
+        if message.is_read == False:
+            message.is_read=True
+            message.save()
+        context={'message':message}
+        return render(request,'users/message.html',context)
+
+class CreateMessageView(LoginRequiredMixin,View):
+    def get(self,request,pk):
+        recipcipient=Profile.objects.get(id=pk)
+        form=MessageForm()
+        sender = request.user.profile
+        context={'recipient':recipcipient,'form':form}
+        return render(request,'users/message_form.html',context)
+    
+    def post(self,request,pk):
+        recipient=Profile.objects.get(id=pk)
+        form=MessageForm(request.POST)
+        sender = request.user.profile
+        if form.is_valid():
+            message=form.save(commit=False)
+            message.sender = sender
+            message.recipient = recipient
+            if sender:
+                message.name = sender.name
+                message.email = sender.email
+            message.save()
+            messages.success(request, 'Your message was successfully sent!')
+            return redirect('profile-detail',pk=recipient.id)
+        return render(request,'users/message_form.html',{'recipient':recipient,'form':form})
+
