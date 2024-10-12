@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'rest_framework',
 ]
 
 SOCAILACCOUNT_PROVIDERS = {
@@ -146,7 +147,14 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-LOGIN_URL = '/users/login/'
+LOGIN_URL = '/accounts/login/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
@@ -168,6 +176,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 LOGIN_REDIRECT_URL = '/training/workouts/'
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/training/workouts/'

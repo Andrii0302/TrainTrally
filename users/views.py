@@ -8,7 +8,7 @@ from .forms import CustomCreationForm, MessageForm,ProfileForm
 from django.views.generic import ListView,DetailView
 from .models import Profile,Message
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.core.mail import send_mail
 class LoginUserView(View):
     page='login'
     def get(self,request):

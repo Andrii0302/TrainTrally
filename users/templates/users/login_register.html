@@ -34,7 +34,7 @@
         </div>
         <div class="auth__actions">
           <input type="submit" value="Log In" />
-          <a href="#">Forget Password?</a>
+          <a href="{% url 'reset_password' %}">Forget Password?</a>
         </div>
       </form>
       <div>
@@ -81,8 +81,6 @@
     </div>
   </div>
 {% endif %}
-{% load socialaccount %}
-<h2>Google login</h2>
-<a href="{% provider_login_url 'google' %}">Login with Google</a>
+
 
 {% endblock content %}

@@ -9,4 +9,9 @@
 <p>Location: {{ profile.location }}</p>
 <p>Short Introduction: {{ profile.short_intro }}</p>
 <p>Bio: {{ profile.bio }}</p>
+{% if user.is_authenticated %}
+    <a href="{% url 'socialaccount_connections' %}">
+        Connect your Google account
+    </a>
+{% endif %}
 {% endblock %}
