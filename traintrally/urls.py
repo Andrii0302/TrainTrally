@@ -23,6 +23,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('training/',include('workouts.urls')),
+    path('chat/',include('realtimechat.urls')),
     path('users/',include('users.urls')),
     path('accounts/',include('allauth.urls')),
     path('api/',include('api.urls')),

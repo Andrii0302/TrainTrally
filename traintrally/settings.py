@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = 'django-insecure-hfj+hwz^$r!w)bk&huxuhn-x008$p0$e4)9*gu_!96b8$j!m_-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 SITE_ID = 2
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'workouts',
     'users',
+    'realtimechat',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -74,6 +76,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'django_htmx.middleware.HtmxMiddleware',
 
 ]
 
@@ -97,7 +100,17 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'traintrally.wsgi.application'
+# WSGI_APPLICATION = 'traintrally.wsgi.application'
+ASGI_APPLICATION ='traintrally.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default':{
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [('redis://default:iOTYfunMDtjjdSmNUZGItxdoHUFvVRZQ@junction.proxy.rlwy.net:47794')],
+        },
+    },
+}
 
 
 # Database
@@ -110,7 +123,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',  # Using the PostgreSQL engine
         'NAME': 'traintrally',               # Name of your PostgreSQL database
         'USER': 'postgres',               # Your PostgreSQL username
-        'PASSWORD': '',                # Your PostgreSQL password
+        'PASSWORD': 'Andrey955#',                # Your PostgreSQL password
         'HOST': 'localhost',                        # Set to 'localhost' for local dev, or the DB server IP
         'PORT': '5432',                             # PostgreSQL port (default is 5432)
     }
@@ -153,8 +166,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'devsearch.project.andrii@gmail.com'
+EMAIL_HOST_PASSWORD = 'rfwa snqr nmhs lnqg'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/

@@ -6,11 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrainTrally</title>
     <link rel="stylesheet" href="{% static 'css/workouts.css' %}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+    
 </head>
 <body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    <script src="https://unpkg.com/htmx.org"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
+    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
     {% include 'navbar.html' %}
     {% block content %}
     {% endblock %}
+    {% block javascript %}{% endblock %}
 </body>
 </html>
