@@ -17,6 +17,18 @@
           <li class="header__menuItem"><a href="{% url 'inbox' %}">Inbox</a></li>
           <li class="header__menuItem"><a href="{% url 'account' %}">Account</a></li>
           <li class="header__menuItem"><a href="{% url 'account_logout' %}" class="btn btn--sub">Logout</a></li>
+          <li><a href="{% url 'chat' %}">Public chat</a></li>
+          {% for chatroom in user.chat_groups.all %}
+          {% if chatroom.is_private %}
+              {% for member in chatroom.members.all %}
+                  {% if member.id != user.id %}  {# Explicit comparison using member IDs #}
+                      <li><a href="{% url 'chatroom' chatroom.group_name %}">{{ member.profile.name }}</a></li>
+                  {% endif %}
+                  
+              {% endfor %}
+          {% endif %}
+      {% endfor %}
+      
           {% else %}
           <li class="header__menuItem"><a href="{% url 'account_login' %}" class="btn btn--sub">Login/Sign Up</a></li>
           {% endif %}
